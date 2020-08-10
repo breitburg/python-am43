@@ -27,10 +27,7 @@ class Blind:
 
         message = bytearray({0x9a}) + bytearray({identifier}) + bytearray({len([data])}) + bytearray([data])
         message += self.calculate_checksum(data=message)
-        result = self.characteristic.write(message)
-
-        if self.reconnect: self.blind.disconnect()
-        return result
+        return self.characteristic.write(message)
 
     def set_position(self, percentage: int) -> None:
         self.send(data=percentage, identifier=self.identifiers.move)

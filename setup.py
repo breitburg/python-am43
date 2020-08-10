@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='am43',
-    version='0.1.0',
+    version='0.1.1',
     author='Ilya Breitburg',
     author_email='me@breitburg.com',
     description='AM43 blinds motor API implementation written on Python',
