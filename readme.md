@@ -12,7 +12,7 @@ Code example:
 ```python
 import am43
 
-blind = am43.Blind(address='xx:xx:xx:xx:xx:xx')
+blind = am43.search('xx:xx:xx:xx:xx:xx')
 blind.set_position(percentage=20)  # Sets blinds position
 ```
 
@@ -33,6 +33,16 @@ properties.light  # 23 <int>
 ```
 
 Light property will be always return zero if the sensor don't plugged into the blind motor.
+
+To use multiple blinds simply define the addresses in the `am43.search` method. It will return a list with a blinds:
+
+```python
+import am43
+blinds = am43.search('xx:xx:xx:xx:xx:xx', 'xx:xx:xx:xx:xx:xx', 'xx:xx:xx:xx:xx:xx')
+
+for blind in blinds:
+    blind.set_position(percentage=10)
+```
 
 ## Installation
 
