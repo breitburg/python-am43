@@ -1,13 +1,14 @@
 from bluepy import btle
 from munch import Munch
+import time
 
 
 class Blind:
-    def __init__(self, device: object = None, auto_connect: bool = True, reconnect: bool = True, retry: bool = True):
+    def __init__(self, device: object = None, auto_connect: bool = True, retry: bool = True):
         self.retry = retry
         self.device = device
         self.identifiers = Munch(move=0x0d, stop=0x0a, battery=0xa2, light=0xaa, position=0xa7)
-
+        self.blind = None
         self._battery = self._position = self._light = None
 
         if auto_connect:
@@ -23,13 +24,25 @@ class Blind:
                 self.blind.setDelegate(delegate)
 
                 self.characteristic = self.blind.getServiceByUUID(service).getCharacteristics(characteristic)[0]
+                return
             except btle.BTLEDisconnectError as error:
+                self.disconnect()
                 if not self.retry:
                     raise error
+                else:
+                    time.sleep(1)
+    
+    def disconnect(self):
+        if self.blind:
+            self.blind.disconnect()
+            self.blind = None
 
     def send(self, data: any, identifier: bytearray, wait_notification: bool = False) -> dict:
         while True:
             try:
+                if not self.blind:
+                    self.connect()
+
                 message = bytearray({0x9a}) + bytearray({identifier}) + bytearray({len([data])}) + bytearray([data])
                 message += self._calculate_checksum(data=message)
 
@@ -38,8 +51,11 @@ class Blind:
 
                 return self.characteristic.write(message)
             except btle.BTLEDisconnectError as error:
+                self.disconnect()
                 if not self.retry:
                     raise error
+                else:
+                    self.connect()
 
     def _update_data(self, data: bytearray) -> None:
         identifier = data[1]
