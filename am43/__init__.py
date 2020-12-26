@@ -1,3 +1,4 @@
-from am43.blind import Blind
+from .blind import Blind
+from .search import search
 
-__all__ = ['Blind']
+__all__ = ['Blind', 'search']
