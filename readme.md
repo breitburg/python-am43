@@ -3,7 +3,7 @@
 AM43 blinds motor protocol implementation written in Python.
 
 > **Warning**  
-> Library supports only Linux, and all features was tested on the Raspberry Pi 4 (4GB)
+> Library supports only Linux, and all features was tested on the Raspberry Pi 4
 
 ## Usage
 
@@ -42,7 +42,7 @@ properties.position  # 100 <int>
 properties.light  # 23 <int>
 ```
 
-Light property will be always return zero if the sensor don't plugged into the blind motor.
+The light property will be zero if the sensor is not plugged in to the blind motor.
 
 ## Installation
 
@@ -52,7 +52,7 @@ To install the latest version you can use `pip` by executing that command:
 $ pip install am43
 ```
 
-All requirements will be installed automatically.
+All the requirements will be installed automatically.
 
 ## Requirements
 
