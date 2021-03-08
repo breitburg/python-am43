@@ -1,4 +1,4 @@
-# python-am43
+# python-am43 ![](https://img.shields.io/pypi/dm/am43)
 
 AM43 blinds motor protocol implementation written in Python.
 
