@@ -7,6 +7,6 @@ def search(*addresses: list, auto_connect: bool = True, retry: bool = True, devi
               device.addr in [address.lower() for address in addresses]]
 
     if not blinds:
-        raise IndexError('there is no blinds were found')
+        raise IndexError('blinds not found')
 
     return blinds[0] if len(blinds) == 1 else blinds
