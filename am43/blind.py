@@ -1,12 +1,11 @@
-from bluepy import btle
-from munch import Munch
 from time import sleep
 
+from bluepy import btle
 
+IDENTIFIERS = {"move":0x0d, "stop":0x0a, "battery":0xa2, "light":0xaa, "position":0xa7}
 class Blind:
     def __init__(self, device: object = None, auto_connect: bool = True, retry: bool = True):
         self._retry = retry
-        self.identifiers = Munch(move=0x0d, stop=0x0a, battery=0xa2, light=0xaa, position=0xa7)
         self._device = device
         self._peripheral = None
         self._battery = self._position = self._light = None
@@ -60,25 +59,25 @@ class Blind:
     def _update_data(self, data: bytearray) -> None:
         identifier = data[1]
 
-        if identifier == self.identifiers.battery:
+        if identifier == IDENTIFIERS["battery"]:
             self._battery = data[7]
-        elif identifier == self.identifiers.position:
+        elif identifier == IDENTIFIERS["position"]:
             self._position = data[5]
-        elif identifier == self.identifiers.light:
+        elif identifier == IDENTIFIERS["light"]:
             self._light = data[4] * 12.5
 
-    def get_properties(self) -> Munch:
-        self.send(data=0x01, identifier=self.identifiers.battery, wait_notification=True)
-        self.send(data=0x01, identifier=self.identifiers.position, wait_notification=True)
-        self.send(data=0x01, identifier=self.identifiers.light, wait_notification=True)
+    def get_properties(self):
+        self.send(data=0x01, identifier=IDENTIFIERS["battery"], wait_notification=True)
+        self.send(data=0x01, identifier=IDENTIFIERS["position"], wait_notification=True)
+        self.send(data=0x01, identifier=IDENTIFIERS["light"], wait_notification=True)
 
-        return Munch(battery=self._battery, position=self._position, light=self._light)
+        return {"battery":self._battery, "position":self._position, "light":self._light}
 
     def set_position(self, percentage: int) -> None:
-        self.send(data=percentage, identifier=self.identifiers.move)
+        self.send(data=percentage, identifier=IDENTIFIERS["move"])
 
     def stop(self) -> None:
-        self.send(data=0xcc, identifier=self.identifiers.stop)
+        self.send(data=0xcc, identifier=IDENTIFIERS["stop"])
 
     @staticmethod
     def _calculate_checksum(data: bytearray) -> bytearray:
